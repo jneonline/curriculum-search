@@ -2,3 +2,5 @@
 .cohort-notice{border:1px solid #e7ca87;background:#fff5de;border-radius:7px;padding:13px 15px;margin:0 0 18px;color:#745014;font-size:.875rem}.cohort-notice strong{display:block;margin-bottom:5px}.cohort-notice p{margin:0;line-height:1.75}
 
 .course-terms{display:block;margin-top:6px;font-size:13px;font-weight:500;line-height:1.6;color:#526681;}
+
+.result-course{margin:0 0 4px}.result-person{margin-bottom:10px}.evidence{margin-top:14px;padding:20px}.evidence .result-tag{margin-bottom:10px}.evidence .result-timing{font-size:1rem;margin:2px 0 12px;color:var(--ink)}.evidence .source-citation{font-size:.8rem;line-height:1.7;margin-top:8px}

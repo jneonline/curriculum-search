@@ -19,10 +19,12 @@ function renderResult(){
  if(r.status==='unselected'){$('result').innerHTML=`<div class="empty"><div class="empty-icon" aria-hidden="true">≡</div><h3>${school()?.departments.length&&!$('department').value?'소속 학과를 선택하세요.':'학교와 강좌를 선택하세요.'}</h3><p>입학 연도에 맞는 교육과정에서<br>1·2·3학년 전체 편성 과목을 확인합니다.</p><span class="empty-caption">이미 배운 과목과 앞으로 배울 과목을 모두 포함</span></div>`;return;}
  const labels={blocked:'편성 확인 · 신청 불가',absent:'동일 과목 편성 없음',review:'교육과정 자료 확인 필요'};
  const descriptions={blocked:'학교의 3개년 교육과정에 같은 과목이 편성되어 있습니다.',absent:'제공된 입학 연도별 편제표의 과목 목록에서 같은 과목이 검색되지 않았습니다. 다른 신청 요건도 확인하세요.',review:r.reason||'전체 편제표 확인이 필요합니다. 이 결과로 신청 가능 여부를 확정할 수 없습니다.'};
- let evidence='';
- if(r.matches){const terms=[...new Set(r.matches.flatMap(rec=>rec.terms||[]))].sort();evidence=`<div class="evidence"><h4>편성 학년·학기</h4><p><strong>${terms.length?escapeHTML(terms.join(' · '))+' 편성':'편성 시기 확인 필요'}</strong></p>${sourceCitation(r.cohort)}</div>`;}
- else if(r.cohort){evidence=`<div class="evidence"><h4>${r.status==='absent'?'비교한 교육과정':'자료 상태'}</h4><p>${escapeHTML(r.cohort.year)}학년도 입학생의 1·2·3학년 편제표${r.cohort.department?' · '+escapeHTML(r.cohort.department):''}</p><p>${escapeHTML(r.cohort.note)}</p>${sourceCitation(r.cohort)}</div>`;}
- $('result').innerHTML=`<p class="result-person">${escapeHTML(person())}</p>${r.notice?`<div class="cohort-notice"><strong>반드시 최신 편제표를 확인하세요.</strong><p>${escapeHTML(r.notice)}</p></div>`:''}<span class="result-tag ${r.status}">${labels[r.status]}</span><h3 class="result-course">${escapeHTML(course)}</h3><p class="result-description">${escapeHTML(descriptions[r.status])}</p>${evidence}<p class="result-footnote">2026학년도 정보공시 자료를 바탕으로 한 결과입니다. 실제 신청 전에 최신 편제표와 운영 기준을 확인하세요.</p>`;
+ const tag=`<span class="result-tag ${r.status}">${labels[r.status]}</span>`;
+ const terms=[...new Set((r.matches||[]).flatMap(rec=>rec.terms||[]))].sort();
+ const timing=r.status==='blocked'?`<p class="result-timing"><strong>${terms.length?escapeHTML(terms.join(' · '))+' 편성':'편성 시기 확인 필요'}</strong></p>`:'';
+ const review=r.status==='review'?`<p>${escapeHTML(descriptions.review)}</p>`:'';
+ const evidence=`<div class="evidence">${tag}${timing}${review}${sourceCitation(r.cohort)}</div>`;
+ $('result').innerHTML=`<p class="result-person">${escapeHTML(person())}</p>${r.notice?`<div class="cohort-notice"><strong>반드시 최신 편제표를 확인하세요.</strong><p>${escapeHTML(r.notice)}</p></div>`:''}<h3 class="result-course">${escapeHTML(course)}</h3>${evidence}<p class="result-footnote">2026학년도 정보공시 자료를 바탕으로 한 결과입니다. 실제 신청 전에 최신 편제표와 운영 기준을 확인하세요.</p>`;
 }
 function sourceCitation(cohort){return cohort?`<p class="source-citation">출처 · 2026학년도 정보공시 학교 교육과정 편제표 · ${escapeHTML(cohort.year)}학년도 입학생 기준</p>`:' ';}
 function renderCourses(){if(!data)return;const filtered=data.courses;let ready=school()&&(!school().departments.length||$('department').value);$('legend').hidden=!ready;$('list-hint').textContent=ready?`${person()} · 22개 강좌를 해당 입학 연도의 3개년 교육과정과 비교합니다.`:'학교를 선택하면 22개 강좌의 편성 여부를 한눈에 볼 수 있습니다.';
